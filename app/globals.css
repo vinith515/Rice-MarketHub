@@ -340,6 +340,14 @@
     color: #1a1a1a;
   }
 
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
   .admin-input:focus {
     outline: 2px solid rgba(45, 90, 61, 0.35);
     border-color: #2d5a3d;

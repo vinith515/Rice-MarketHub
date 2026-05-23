@@ -6,13 +6,14 @@ import { loginAdmin, type LoginAdminState } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock, X } from "lucide-react";
+import { Eye, EyeOff, Lock, X } from "lucide-react";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 
 const initialState: LoginAdminState = {};
 
 function AdminLoginForm({ onClose }: { onClose: () => void }) {
   const [state, formAction, pending] = useActionState(loginAdmin, initialState);
+  const [showPassword, setShowPassword] = useState(false);
   const supabaseLive = isSupabaseConfigured();
 
   return (
@@ -66,20 +67,34 @@ function AdminLoginForm({ onClose }: { onClose: () => void }) {
             type="email"
             required
             autoComplete="email"
-            className="mt-1 text-base"
+            className="mt-1 h-11 text-base text-charcoal bg-white border-border"
             placeholder="admin@yourbusiness.com"
           />
         </div>
         <div>
           <Label htmlFor="admin-password">Password</Label>
-          <Input
-            id="admin-password"
-            name="password"
-            type="password"
-            required
-            autoComplete="current-password"
-            className="mt-1 text-base"
-          />
+          <div className="relative mt-1">
+            <Input
+              id="admin-password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              required
+              autoComplete="current-password"
+              className="h-11 text-base text-charcoal bg-white border-border pr-11 [-webkit-text-fill-color:#1a1a1a]"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-charcoal/70 hover:text-charcoal"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          </div>
         </div>
         <Button
           type="submit"
@@ -105,7 +120,7 @@ export function AdminLoginPanel({
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4"
+      className="fixed inset-0 z-[10000] flex items-end sm:items-center justify-center p-0 sm:p-4"
       role="dialog"
       aria-labelledby="admin-login-title"
     >
@@ -115,7 +130,7 @@ export function AdminLoginPanel({
         aria-label="Close"
         onClick={onClose}
       />
-      <div className="relative w-full sm:max-w-md max-h-[92vh] overflow-y-auto rice-enquiry-panel shadow-2xl rounded-t-2xl sm:rounded-2xl p-6 pb-8 sm:pb-6">
+      <div className="relative w-full sm:max-w-md max-h-[92vh] overflow-y-auto bg-white shadow-2xl rounded-t-2xl sm:rounded-2xl p-6 pb-8 sm:pb-6 border border-border">
         <AdminLoginForm onClose={onClose} />
       </div>
     </div>

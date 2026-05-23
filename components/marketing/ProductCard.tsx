@@ -6,9 +6,8 @@ import { pickProductImageUrl } from "@/lib/product-images";
 import { motion } from "framer-motion";
 import type { Product } from "@/types/database";
 import { Badge } from "@/components/ui/badge";
-import { WhatsAppEnquiryOptions } from "./WhatsAppEnquiryOptions";
+import { ProductWhatsAppEnquiry } from "./ProductWhatsAppEnquiry";
 import { BrandLogo } from "./BrandLogo";
-import { buildProductEnquiryMessage } from "@/lib/whatsapp";
 import type { WhatsAppSettings } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 import { formatPricePerKgParts } from "@/lib/pricing";
@@ -30,7 +29,6 @@ export function ProductCard({
 }) {
   const image = pickProductImageUrl(product);
   const status = statusMap[product.availability_status];
-  const defaultSize = product.package_sizes?.find((p) => p.available)?.size_kg;
   const priceParts = formatPricePerKgParts(product.price_per_kg);
   const brandName = product.brand?.name;
 
@@ -133,14 +131,9 @@ export function ProductCard({
             View Details
           </Link>
           <div className="mt-2">
-            <WhatsAppEnquiryOptions
-              message={buildProductEnquiryMessage({
-                productName: product.name,
-                packageKg: defaultSize,
-                pricePerKg: product.price_per_kg,
-              })}
+            <ProductWhatsAppEnquiry
+              product={product}
               settings={whatsappSettings}
-              productId={product.id}
               layout="stack"
             />
           </div>

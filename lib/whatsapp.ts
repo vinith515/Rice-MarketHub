@@ -8,7 +8,9 @@ export type WhatsAppSettings = {
 };
 
 export type ProductEnquiryParams = {
+  brandName?: string | null;
   productName: string;
+  categoryName?: string | null;
   packageKg?: number;
   businessType?: string;
   district?: string;
@@ -57,7 +59,9 @@ export function parseWhatsAppSettings(
 }
 
 export function buildProductEnquiryMessage({
+  brandName,
   productName,
+  categoryName,
   packageKg,
   businessType,
   district,
@@ -65,30 +69,42 @@ export function buildProductEnquiryMessage({
   quantityUnit,
   quantityValue,
 }: ProductEnquiryParams): string {
-  const parts: string[] = [
-    `Hello, I am interested in ${productName}.`,
-  ];
+  const parts: string[] = ["Hello, I would like to enquire about bulk rice supply."];
+
+  if (brandName?.trim()) {
+    parts.push(`Brand: ${brandName.trim()}.`);
+  }
+  parts.push(`Variety: ${productName}.`);
+  if (categoryName?.trim()) {
+    parts.push(`Rice type: ${categoryName.trim()}.`);
+  }
   if (pricePerKg != null) {
     parts.push(`Indicative rate: ₹${pricePerKg}/kg.`);
   }
-  if (quantityUnit && quantityValue) {
+
+  if (quantityUnit && quantityValue != null && quantityValue > 0) {
     if (quantityUnit === "quintals") {
       parts.push(`Quantity required: ${quantityValue} quintal(s).`);
     } else if (packageKg) {
       parts.push(
-        `Quantity required: ${quantityValue} bag(s) of ${packageKg}kg.`
+        `Quantity required: ${quantityValue} bag(s) of ${packageKg} kg each.`
       );
     } else {
       parts.push(`Quantity required: ${quantityValue} bag(s).`);
     }
   } else if (packageKg) {
-    parts.push(`Pack size: ${packageKg}kg.`);
+    parts.push(`Preferred pack size: ${packageKg} kg bags.`);
+    parts.push(`Quantity required: [please specify number of bags or quintals].`);
+  } else {
+    parts.push(`Quantity required: [please specify quintals or bags].`);
   }
+
   const businessPart = businessType
-    ? `Business: ${businessType.replace(/_/g, " ")}.`
-    : "Bulk supply enquiry.";
-  parts.push(businessPart);
+    ? `Business type: ${businessType.replace(/_/g, " ")}.`
+    : null;
+  if (businessPart) parts.push(businessPart);
   if (district) parts.push(`District: ${district}.`);
+
   return parts.join(" ");
 }
 

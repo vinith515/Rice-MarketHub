@@ -5,10 +5,9 @@ import { pickProductImageUrl } from "@/lib/product-images";
 import Link from "next/link";
 import { getProductBySlug, getProducts } from "@/lib/data";
 import { ProductShowcase3D } from "@/components/three/ProductShowcase3D";
-import { WhatsAppOptionsLoader } from "@/components/marketing/WhatsAppOptionsLoader";
+import { ProductWhatsAppEnquiryLoader } from "@/components/marketing/ProductWhatsAppEnquiryLoader";
 import { EnquiryForm } from "@/components/marketing/EnquiryForm";
 import { Badge } from "@/components/ui/badge";
-import { buildProductEnquiryMessage } from "@/lib/whatsapp";
 import { formatPricePerKgParts } from "@/lib/pricing";
 import { BrandLogo } from "@/components/marketing/BrandLogo";
 import { getDistricts } from "@/lib/data";
@@ -51,7 +50,6 @@ export default async function ProductDetailPage({
   if (!product) notFound();
 
   const image = pickProductImageUrl(product);
-  const defaultSize = product.package_sizes?.find((p) => p.available)?.size_kg;
   const priceParts = formatPricePerKgParts(product.price_per_kg);
 
   return (
@@ -163,16 +161,7 @@ export default async function ProductDetailPage({
               </Badge>
 
               <div className="mb-8">
-                <WhatsAppOptionsLoader
-                  message={buildProductEnquiryMessage({
-                    productName: product.name,
-                    packageKg: defaultSize,
-                    pricePerKg: product.price_per_kg,
-                  })}
-                  productId={product.id}
-                  layout="stack"
-                  showHint
-                />
+                <ProductWhatsAppEnquiryLoader product={product} />
               </div>
 
               <div>
