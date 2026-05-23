@@ -15,28 +15,47 @@ import {
 } from "@/lib/admin-store";
 import type { Enquiry, Product } from "@/types/database";
 
-export async function loginAdmin(formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+export type LoginAdminState = { error?: string };
+
+export async function loginAdmin(
+  _prev: LoginAdminState,
+  formData: FormData
+): Promise<LoginAdminState> {
+  const email = String(formData.get("email") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+
+  if (!email || !password) {
+    return { error: "Email and password are required." };
+  }
 
   if (!isSupabaseConfigured()) {
-    // Demo mode only when Supabase is not configured
     if (email === "admin@example.com" && password === "admin123") {
       const cookieStore = await cookies();
       cookieStore.set("demo_admin", "true", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
+        path: "/",
         maxAge: 60 * 60 * 24 * 7,
       });
       redirect("/admin");
     }
-    throw new Error("Invalid credentials");
+    return {
+      error:
+        "Invalid demo login. Use admin@example.com / admin123 when Supabase is not configured.",
+    };
   }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw new Error(error.message);
+  if (error) {
+    return {
+      error:
+        error.message === "Invalid login credentials"
+          ? "Invalid email or password. Use the same Supabase user you created in Authentication → Users (not the local demo login)."
+          : error.message,
+    };
+  }
   redirect("/admin");
 }
 

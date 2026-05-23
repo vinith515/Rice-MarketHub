@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { ProductImage } from "./ProductImage";
+import { pickProductImageUrl } from "@/lib/product-images";
 import { motion } from "framer-motion";
 import type { Product } from "@/types/database";
 import { Badge } from "@/components/ui/badge";
@@ -27,7 +28,7 @@ export function ProductCard({
   index?: number;
   whatsappSettings: WhatsAppSettings;
 }) {
-  const image = product.images?.[0]?.url;
+  const image = pickProductImageUrl(product);
   const status = statusMap[product.availability_status];
   const defaultSize = product.package_sizes?.find((p) => p.available)?.size_kg;
   const priceParts = formatPricePerKgParts(product.price_per_kg);
@@ -44,17 +45,12 @@ export function ProductCard({
       <div className="relative overflow-hidden rice-card-classic shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
         <Link href={`/products/${product.slug}`} className="block">
           <div className="relative aspect-[4/3] overflow-hidden bg-secondary">
-            {image ? (
-              <Image
-                src={image}
-                alt={product.images?.[0]?.alt || product.name}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-            ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-rice/20 to-gold/20" />
-            )}
+            <ProductImage
+              src={image}
+              alt={product.images?.[0]?.alt || product.name}
+              className="transition-transform duration-700 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent to-transparent" />
             {brandName && (
               <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg bg-white/95 px-2 py-1.5 shadow-md border border-white/80">

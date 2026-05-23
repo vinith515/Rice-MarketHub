@@ -18,11 +18,21 @@ export async function saveProductImageAction(
 ) {
   try {
     const supabase = await getSupabase();
+    const { data: latest } = await supabase
+      .from("product_images")
+      .select("sort_order")
+      .eq("product_id", productId)
+      .order("sort_order", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    const sort_order = (latest?.sort_order ?? -1) + 1;
+
     const { error } = await supabase.from("product_images").insert({
       product_id: productId,
       url,
       alt: alt ?? null,
-      sort_order: 0,
+      sort_order,
     });
     if (error) return { error: error.message };
     revalidatePath("/admin/products");

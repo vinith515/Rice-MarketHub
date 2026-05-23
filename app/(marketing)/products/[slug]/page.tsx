@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import { ProductImage } from "@/components/marketing/ProductImage";
+import { pickProductImageUrl } from "@/lib/product-images";
 import Link from "next/link";
 import { getProductBySlug, getProducts } from "@/lib/data";
 import { ProductShowcase3D } from "@/components/three/ProductShowcase3D";
@@ -48,7 +50,7 @@ export default async function ProductDetailPage({
 
   if (!product) notFound();
 
-  const image = product.images?.[0]?.url;
+  const image = pickProductImageUrl(product);
   const defaultSize = product.package_sizes?.find((p) => p.available)?.size_kg;
   const priceParts = formatPricePerKgParts(product.price_per_kg);
 
@@ -71,12 +73,10 @@ export default async function ProductDetailPage({
                 productName={product.name}
               />
               {image && (
-                <div className="mt-4 relative aspect-video rounded-xl overflow-hidden">
-                  <Image
+                <div className="mt-4 relative aspect-video rounded-xl overflow-hidden bg-secondary">
+                  <ProductImage
                     src={image}
                     alt={product.name}
-                    fill
-                    className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                 </div>
