@@ -3,21 +3,14 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { X } from "lucide-react";
+import { Home, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { SiteLogo } from "./SiteLogo";
 import { WhatsAppEnquiryOptions } from "./WhatsAppEnquiryOptions";
 import type { WhatsAppSettings } from "@/lib/whatsapp";
+import { siteNav, isNavActive } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
-
-const nav = [
-  { href: "/products", label: "Products" },
-  { href: "/about", label: "About" },
-  { href: "/coverage", label: "Coverage" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/contact", label: "Contact" },
-];
 
 export function MobileNavDrawer({
   open,
@@ -64,11 +57,13 @@ export function MobileNavDrawer({
           className="fixed inset-0 z-[9999] lg:hidden flex flex-col bg-charcoal"
         >
           <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-white/10 shrink-0 safe-area-top">
-            <SiteLogo businessName={businessName} showName variant="dark" />
+            <Link href="/" onClick={onClose} className="min-w-0">
+              <SiteLogo businessName={businessName} showName variant="dark" />
+            </Link>
             <button
               type="button"
               onClick={onClose}
-              className="p-2.5 rounded-lg text-cream hover:bg-white/10 shrink-0"
+              className="p-2.5 rounded-lg text-cream hover:bg-white/10 shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Close menu"
             >
               <X className="h-6 w-6" />
@@ -76,24 +71,37 @@ export function MobileNavDrawer({
           </div>
 
           <nav className="flex-1 overflow-y-auto px-4 py-2">
-            {nav.map((item) => {
-              const active =
-                pathname === item.href ||
-                (item.href !== "/" && pathname.startsWith(item.href));
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className={cn(
-                    "block py-4 text-lg font-medium border-b border-white/10",
-                    active ? "text-gold" : "text-cream"
-                  )}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+            <Link
+              href="/"
+              onClick={onClose}
+              className={cn(
+                "flex items-center gap-3 py-4 text-lg font-semibold border-b border-white/10",
+                pathname === "/"
+                  ? "text-gold"
+                  : "text-cream"
+              )}
+            >
+              <Home className="h-5 w-5 shrink-0" />
+              Home
+            </Link>
+            {siteNav
+              .filter((item) => item.href !== "/")
+              .map((item) => {
+                const active = isNavActive(pathname, item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onClose}
+                    className={cn(
+                      "block py-4 text-lg font-medium border-b border-white/10",
+                      active ? "text-gold" : "text-cream"
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
           </nav>
 
           <div className="shrink-0 p-4 pt-2 border-t border-white/10 space-y-3 safe-area-bottom">

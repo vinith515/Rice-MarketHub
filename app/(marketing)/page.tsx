@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { Suspense } from "react";
-import { HomePageClient } from "@/components/marketing/HomePageClient";
 import { AdminLoginTrigger } from "@/components/marketing/AdminLoginPanel";
 import {
   getProducts,
@@ -27,9 +25,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <Suspense fallback={null}>
-        <HomePageClient />
-      </Suspense>
       <Hero
         content={heroContent as Record<string, string> | null}
         whatsappSettings={whatsappSettings}

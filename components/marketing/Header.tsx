@@ -10,15 +10,8 @@ import { Button } from "@/components/ui/button";
 import { WhatsAppEnquiryOptions } from "./WhatsAppEnquiryOptions";
 import { buildGeneralEnquiryMessage } from "@/lib/whatsapp";
 import type { WhatsAppSettings } from "@/lib/whatsapp";
+import { siteNav, isNavActive } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
-
-const nav = [
-  { href: "/products", label: "Products" },
-  { href: "/about", label: "About" },
-  { href: "/coverage", label: "Coverage" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/contact", label: "Contact" },
-];
 
 export function Header({
   whatsappSettings,
@@ -40,15 +33,13 @@ export function Header({
       <header className="fixed top-0 left-0 right-0 z-[100]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <nav className="mt-3 sm:mt-4 flex items-center justify-between rounded-2xl border border-gold/25 bg-charcoal shadow-lg px-3 py-2.5 sm:px-6 sm:py-3">
-            <Link href="/" className="group min-w-0 max-w-[58%] sm:max-w-none">
+            <Link href="/" className="group min-w-0 max-w-[50%] sm:max-w-none">
               <SiteLogo businessName={businessName} showName variant="dark" />
             </Link>
 
-            <div className="hidden lg:flex items-center gap-6">
-              {nav.map((item) => {
-                const active =
-                  pathname === item.href ||
-                  (item.href !== "/" && pathname.startsWith(item.href));
+            <div className="hidden lg:flex items-center gap-5">
+              {siteNav.map((item) => {
+                const active = isNavActive(pathname, item.href);
                 return (
                   <Link
                     key={item.href}

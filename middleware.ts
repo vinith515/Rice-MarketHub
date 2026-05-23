@@ -11,15 +11,20 @@ export async function middleware(request: NextRequest) {
     supabaseKey &&
     !supabaseUrl.includes("your_supabase");
 
+  const pathname = request.nextUrl.pathname;
+  const isLogin = pathname === "/admin/login";
+
   if (!isConfigured) {
-    if (request.nextUrl.pathname.startsWith("/admin")) {
-      const isLogin = request.nextUrl.pathname === "/admin/login";
+    if (pathname.startsWith("/admin")) {
       const demoAuth = request.cookies.get("demo_admin")?.value === "true";
       if (isLogin) {
-        return NextResponse.redirect(new URL("/?admin=1", request.url));
+        if (demoAuth) {
+          return NextResponse.redirect(new URL("/admin", request.url));
+        }
+        return supabaseResponse;
       }
       if (!demoAuth) {
-        return NextResponse.redirect(new URL("/?admin=1", request.url));
+        return NextResponse.redirect(new URL("/admin/login", request.url));
       }
     }
     return supabaseResponse;
@@ -52,13 +57,15 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    const isLogin = request.nextUrl.pathname === "/admin/login";
+  if (pathname.startsWith("/admin")) {
     if (isLogin) {
-      return NextResponse.redirect(new URL("/?admin=1", request.url));
+      if (user) {
+        return NextResponse.redirect(new URL("/admin", request.url));
+      }
+      return supabaseResponse;
     }
     if (!user) {
-      return NextResponse.redirect(new URL("/?admin=1", request.url));
+      return NextResponse.redirect(new URL("/admin/login", request.url));
     }
   }
 

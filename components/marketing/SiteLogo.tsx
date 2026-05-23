@@ -11,9 +11,10 @@ export function SiteLogo({
   logoUrl?: string | null;
   businessName: string;
   showName?: boolean;
-  variant?: "dark" | "light";
+  variant?: "dark" | "light" | "onLight";
 }) {
-  const isDark = variant === "dark";
+  const onNav = variant === "dark";
+  const onLightBg = variant === "onLight";
 
   return (
     <span className="flex items-center gap-2.5 min-w-0">
@@ -21,7 +22,7 @@ export function SiteLogo({
         <span
           className={cn(
             "relative h-10 w-10 shrink-0 rounded-xl overflow-hidden",
-            isDark
+            onNav || onLightBg
               ? "bg-white ring-1 ring-gold/30"
               : "bg-white/10 ring-1 ring-white/20"
           )}
@@ -40,7 +41,7 @@ export function SiteLogo({
         <span
           className={cn(
             "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
-            isDark
+            onNav || onLightBg
               ? "bg-gold/25 text-gold ring-1 ring-gold/40"
               : "bg-gold/20 text-gold ring-1 ring-gold/30"
           )}
@@ -52,7 +53,7 @@ export function SiteLogo({
         <span
           className={cn(
             "font-display text-lg font-semibold truncate",
-            isDark ? "text-cream" : "text-cream"
+            onLightBg ? "text-charcoal" : "text-cream"
           )}
         >
           {businessName}
