@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useFormState, useFormStatus } from "react-dom";
 import { useSearchParams } from "next/navigation";
 import { loginAdmin, type LoginAdminState } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
@@ -11,8 +12,22 @@ import { isSupabaseConfigured } from "@/lib/supabase/client";
 
 const initialState: LoginAdminState = {};
 
+function AdminLoginSubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button
+      type="submit"
+      variant="gold"
+      className="w-full h-11"
+      disabled={pending}
+    >
+      {pending ? "Signing in…" : "Sign in to admin"}
+    </Button>
+  );
+}
+
 function AdminLoginForm({ onClose }: { onClose: () => void }) {
-  const [state, formAction, pending] = useActionState(loginAdmin, initialState);
+  const [state, formAction] = useFormState(loginAdmin, initialState);
   const [showPassword, setShowPassword] = useState(false);
   const supabaseLive = isSupabaseConfigured();
 
@@ -96,14 +111,7 @@ function AdminLoginForm({ onClose }: { onClose: () => void }) {
             </button>
           </div>
         </div>
-        <Button
-          type="submit"
-          variant="gold"
-          className="w-full h-11"
-          disabled={pending}
-        >
-          {pending ? "Signing in…" : "Sign in to admin"}
-        </Button>
+        <AdminLoginSubmitButton />
       </form>
     </>
   );
