@@ -1,0 +1,380 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 20% 97%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --primary: 145 33% 27%;
+    --primary-foreground: 40 20% 97%;
+    --secondary: 40 30% 92%;
+    --secondary-foreground: 0 0% 15%;
+    --muted: 40 15% 90%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 43 70% 47%;
+    --accent-foreground: 0 0% 10%;
+    --border: 40 15% 85%;
+    --input: 40 15% 85%;
+    --ring: 145 33% 27%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 0 0% 8%;
+    --foreground: 40 20% 95%;
+    --card: 0 0% 12%;
+    --card-foreground: 40 20% 95%;
+    --primary: 145 33% 35%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 40 20% 90%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 40 10% 65%;
+    --accent: 43 70% 47%;
+    --accent-foreground: 0 0% 10%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 43 70% 47%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/10 backdrop-blur-xl border border-white/20;
+  }
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-xl border border-white/10;
+  }
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-gold via-amber-300 to-gold bg-clip-text text-transparent;
+  }
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24;
+  }
+  .content-visibility-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+  }
+
+  /* Classic rice marketplace theme */
+  .rice-hero {
+    background-color: #1a1a1a;
+  }
+
+  .rice-page-bg {
+    background-color: transparent;
+  }
+
+  @keyframes rice-float-a {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(-2deg);
+    }
+    50% {
+      transform: translate(18px, -28px) rotate(2deg);
+    }
+  }
+
+  @keyframes rice-float-b {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(2deg);
+    }
+    50% {
+      transform: translate(-22px, 20px) rotate(-3deg);
+    }
+  }
+
+  @keyframes rice-float-c {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(14px, 24px);
+    }
+  }
+
+  @keyframes rice-float-d {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(1deg);
+    }
+    50% {
+      transform: translate(-16px, -20px) rotate(-2deg);
+    }
+  }
+
+  @keyframes rice-float-e {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(20px, -16px);
+    }
+  }
+
+  @keyframes rice-float-f {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(-1deg);
+    }
+    50% {
+      transform: translate(-12px, -32px) rotate(2deg);
+    }
+  }
+
+  @keyframes rice-float-g {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(0, -24px);
+    }
+  }
+
+  @keyframes rice-float-h {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(2deg);
+    }
+    50% {
+      transform: translate(24px, 12px) rotate(-2deg);
+    }
+  }
+
+  @keyframes rice-fade-in-float {
+    to {
+      opacity: 0.38;
+    }
+  }
+
+  @keyframes rice-marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .rice-float-a {
+    animation: rice-float-a 14s ease-in-out infinite;
+  }
+  .rice-float-b {
+    animation: rice-float-b 16s ease-in-out infinite;
+  }
+  .rice-float-c {
+    animation: rice-float-c 18s ease-in-out infinite;
+  }
+  .rice-float-d {
+    animation: rice-float-d 15s ease-in-out infinite;
+  }
+  .rice-float-e {
+    animation: rice-float-e 17s ease-in-out infinite;
+  }
+  .rice-float-f {
+    animation: rice-float-f 13s ease-in-out infinite;
+  }
+  .rice-float-g {
+    animation: rice-float-g 19s ease-in-out infinite;
+  }
+  .rice-float-h {
+    animation: rice-float-h 16s ease-in-out infinite;
+  }
+
+  .rice-float-visible {
+    animation: rice-fade-in-float 2s ease forwards;
+  }
+
+  .rice-marquee-track {
+    animation: rice-marquee 45s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rice-float-a,
+    .rice-float-b,
+    .rice-float-c,
+    .rice-float-d,
+    .rice-float-e,
+    .rice-float-f,
+    .rice-float-g,
+    .rice-float-h,
+    .rice-marquee-track {
+      animation: none;
+    }
+  }
+
+  .rice-stat-pill {
+    @apply rounded-xl p-4 border border-gold/20 backdrop-blur-md;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .rice-enquiry-panel {
+    @apply rounded-2xl border-2 border-rice/25 bg-gradient-to-b from-card to-secondary/30 p-6 md:p-8 shadow-lg;
+    box-shadow: 0 4px 24px hsl(145 33% 27% / 0.08);
+  }
+
+  .rice-price-banner {
+    @apply rounded-xl border border-gold/35 bg-gradient-to-br from-gold/15 via-cream to-rice/5 px-5 py-4 shadow-sm;
+  }
+
+  .rice-section-frame {
+    @apply relative;
+  }
+
+  .rice-section-frame::before {
+    content: "";
+    @apply absolute left-1/2 -translate-x-1/2 -top-3 w-24 h-1 rounded-full bg-gradient-to-r from-transparent via-gold to-transparent;
+  }
+
+  .rice-card-classic {
+    @apply rounded-2xl border border-border bg-card shadow-md overflow-hidden;
+    background-color: hsl(0 0% 100% / 0.97);
+  }
+
+  .rice-section-surface {
+    background-color: hsl(40 24% 97% / 0.94);
+    @apply backdrop-blur-md border-y border-rice/10 shadow-sm;
+  }
+
+  .rice-divider {
+    @apply h-px w-full max-w-xs mx-auto my-8;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(43 70% 47% / 0.5),
+      transparent
+    );
+  }
+
+  /* Admin panel — explicit colors so UI never renders unstyled */
+  .admin-root a:not([class*="rounded"]) {
+    text-decoration: none;
+  }
+  .admin-sidebar {
+    background-color: #1a1a1a;
+    color: #f5f0e8;
+    border-right: 1px solid rgba(201, 162, 39, 0.2);
+  }
+  .admin-sidebar a.admin-nav-active {
+    background-color: rgba(201, 162, 39, 0.2);
+    color: #c9a227;
+  }
+  .admin-sidebar a.admin-nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #f5f0e8;
+  }
+  .admin-main {
+    background: linear-gradient(135deg, #f8f5ef 0%, #f0ebe3 50%, #e8e2d8 100%);
+  }
+  .admin-card {
+    background: #ffffff;
+    border: 1px solid #e5dfd4;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(26, 26, 26, 0.06);
+  }
+  .admin-card-header {
+    border-bottom: 1px solid #ebe6dc;
+    padding: 1.25rem 1.5rem;
+  }
+  .admin-btn-primary {
+    background-color: #2d5a3d;
+    color: #f5f0e8;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+  }
+  .admin-btn-primary:hover {
+    background-color: #244a32;
+  }
+  .admin-btn-gold {
+    background-color: #c9a227;
+    color: #1a1a1a;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+  }
+  .admin-btn-gold:hover {
+    background-color: #b8921f;
+  }
+
+  .admin-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #5c5c5c;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .admin-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e5dfd4;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    background: #fff;
+    color: #1a1a1a;
+  }
+
+  .admin-input:focus {
+    outline: 2px solid rgba(45, 90, 61, 0.35);
+    border-color: #2d5a3d;
+  }
+  .admin-btn-outline {
+    background: #fff;
+    color: #2d5a3d;
+    border: 1px solid #2d5a3d;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+  .admin-badge-gold {
+    background: rgba(201, 162, 39, 0.15);
+    color: #8a6f12;
+    padding: 0.125rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .admin-badge-green {
+    background: #dcfce7;
+    color: #166534;
+    padding: 0.125rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

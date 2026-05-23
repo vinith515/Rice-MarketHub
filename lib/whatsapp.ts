@@ -1,0 +1,129 @@
+export type WhatsAppSettings = {
+  number: string;
+  group_invite_url: string | null;
+  group_enabled: boolean;
+  direct_label: string;
+  group_label: string;
+  group_description: string;
+};
+
+export type ProductEnquiryParams = {
+  productName: string;
+  packageKg?: number;
+  businessType?: string;
+  district?: string;
+  pricePerKg?: number | null;
+  quantityUnit?: "quintals" | "bags";
+  quantityValue?: number;
+};
+
+const DEFAULT_SETTINGS: WhatsAppSettings = {
+  number: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210",
+  group_invite_url: process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL || null,
+  group_enabled: Boolean(process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL),
+  direct_label: "Enquire on WhatsApp",
+  group_label: "Business WhatsApp Group",
+  group_description:
+    "Join our team group — multiple members can respond to your bulk rice enquiry faster.",
+};
+
+export function getDefaultWhatsAppSettings(): WhatsAppSettings {
+  return { ...DEFAULT_SETTINGS };
+}
+
+export function parseWhatsAppSettings(
+  value: unknown
+): WhatsAppSettings {
+  const defaults = getDefaultWhatsAppSettings();
+  if (!value || typeof value !== "object") return defaults;
+
+  const v = value as Record<string, unknown>;
+  return {
+    number: String(v.number ?? defaults.number).replace(/\D/g, "") || defaults.number,
+    group_invite_url:
+      typeof v.group_invite_url === "string" && v.group_invite_url.trim()
+        ? v.group_invite_url.trim()
+        : defaults.group_invite_url,
+    group_enabled:
+      typeof v.group_enabled === "boolean"
+        ? v.group_enabled
+        : Boolean(v.group_invite_url ?? defaults.group_invite_url),
+    direct_label: String(v.direct_label ?? defaults.direct_label),
+    group_label: String(v.group_label ?? defaults.group_label),
+    group_description: String(
+      v.group_description ?? defaults.group_description
+    ),
+  };
+}
+
+export function buildProductEnquiryMessage({
+  productName,
+  packageKg,
+  businessType,
+  district,
+  pricePerKg,
+  quantityUnit,
+  quantityValue,
+}: ProductEnquiryParams): string {
+  const parts: string[] = [
+    `Hello, I am interested in ${productName}.`,
+  ];
+  if (pricePerKg != null) {
+    parts.push(`Indicative rate: ₹${pricePerKg}/kg.`);
+  }
+  if (quantityUnit && quantityValue) {
+    if (quantityUnit === "quintals") {
+      parts.push(`Quantity required: ${quantityValue} quintal(s).`);
+    } else if (packageKg) {
+      parts.push(
+        `Quantity required: ${quantityValue} bag(s) of ${packageKg}kg.`
+      );
+    } else {
+      parts.push(`Quantity required: ${quantityValue} bag(s).`);
+    }
+  } else if (packageKg) {
+    parts.push(`Pack size: ${packageKg}kg.`);
+  }
+  const businessPart = businessType
+    ? `Business: ${businessType.replace(/_/g, " ")}.`
+    : "Bulk supply enquiry.";
+  parts.push(businessPart);
+  if (district) parts.push(`District: ${district}.`);
+  return parts.join(" ");
+}
+
+export function buildGeneralEnquiryMessage(businessType?: string): string {
+  const type = businessType
+    ? ` as a ${businessType.replace(/_/g, " ")}`
+    : "";
+  return `Hello, I would like to enquire about bulk rice supply${type} across Telangana.`;
+}
+
+/** Direct chat with your business number (prefilled message). */
+export function getWhatsAppDirectUrl(
+  message: string,
+  number?: string
+): string {
+  const cleanNumber = (number || DEFAULT_SETTINGS.number).replace(/\D/g, "");
+  return `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
+}
+
+/** @deprecated Use getWhatsAppDirectUrl */
+export function getWhatsAppUrl(message: string): string {
+  return getWhatsAppDirectUrl(message);
+}
+
+/** Group invite — team members handle enquiries in the group. */
+export function getWhatsAppGroupUrl(inviteUrl: string): string {
+  const url = inviteUrl.trim();
+  if (url.startsWith("http")) return url;
+  return `https://chat.whatsapp.com/${url.replace(/^\/+/, "")}`;
+}
+
+export function isGroupConfigured(settings: WhatsAppSettings): boolean {
+  return Boolean(
+    settings.group_enabled &&
+      settings.group_invite_url &&
+      settings.group_invite_url.length > 10
+  );
+}
