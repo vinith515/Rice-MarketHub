@@ -7,10 +7,9 @@ import {
   updateProductDetailsAction,
   deleteProductAction,
 } from "@/app/admin/catalog-actions";
+import { PACKAGE_SIZES } from "@/lib/constants";
 import { PRIMARY_RICE_CATEGORIES } from "@/lib/rice-categories";
 import type { Brand, Category, Product } from "@/types/database";
-
-const SIZES = [5, 10, 25, 50];
 
 export function ProductForm({
   product,
@@ -169,7 +168,7 @@ export function ProductForm({
       <div>
         <label className="admin-label">Pack sizes available</label>
         <div className="flex flex-wrap gap-4 mt-2">
-          {SIZES.map((size) => (
+          {PACKAGE_SIZES.map((size) => (
             <label key={size} className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"

@@ -1,4 +1,4 @@
-export const PACKAGE_SIZES = [5, 10, 25, 50] as const;
+export const PACKAGE_SIZES = [5, 10, 25, 26, 30, 50] as const;
 
 export const BUSINESS_TYPES = [
   { value: "retailer", label: "Retailer" },

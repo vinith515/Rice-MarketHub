@@ -13,9 +13,8 @@ import {
   updateBrandInStore,
   updateProductInStore,
 } from "@/lib/admin-store";
+import { PACKAGE_SIZES } from "@/lib/constants";
 import type { Product } from "@/types/database";
-
-const PACKAGE_SIZES = [5, 10, 25, 50] as const;
 
 function parsePackageSizes(formData: FormData): number[] {
   return PACKAGE_SIZES.filter((size) => formData.get(`size_${size}`) === "on");
