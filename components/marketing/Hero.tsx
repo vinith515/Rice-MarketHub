@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
@@ -9,7 +8,7 @@ import { WhatsAppEnquiryOptions } from "./WhatsAppEnquiryOptions";
 import { RiceHeroSlideshow } from "./RiceHeroSlideshow";
 import { useVisitorWhatsAppMessage } from "@/hooks/useVisitorWhatsAppMessage";
 import type { WhatsAppSettings } from "@/lib/whatsapp";
-import { HERO_RICE_IMAGES } from "@/lib/rice-gallery-images";
+import { HERO_RICE_IMAGE } from "@/lib/rice-gallery-images";
 import { cn } from "@/lib/utils";
 
 type HeroContent = {
@@ -25,24 +24,19 @@ export function Hero({
   content: HeroContent | null;
   whatsappSettings: WhatsAppSettings;
 }) {
-  const [slideIndex, setSlideIndex] = useState(0);
-  const textTheme = HERO_RICE_IMAGES[slideIndex]?.heroTextTheme ?? "light";
-  const darkText = textTheme === "dark";
+  const darkText = HERO_RICE_IMAGE.heroTextTheme === "dark";
   const enquiryMessage = useVisitorWhatsAppMessage();
 
   const headline =
-    content?.headline || "Trusted Rice Distribution Across Telangana";
+    content?.headline || "Best Quality Rice at Wholesale Prices";
   const subheadline =
-    content?.subheadline || "Premium Basmati & HMT Sona Masoori";
+    content?.subheadline || "Premium Basmati & HMT, Sona Masoori";
   const tagline =
     content?.tagline || "Bulk Supply for Retailers & Hotels";
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-charcoal rice-hero">
-      <RiceHeroSlideshow
-        activeIndex={slideIndex}
-        onActiveIndexChange={setSlideIndex}
-      />
+      <RiceHeroSlideshow />
 
       <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-transparent via-gold to-transparent opacity-80" />
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gold/30" />
@@ -53,7 +47,7 @@ export function Hero({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className={cn(
-            "max-w-3xl rounded-2xl p-5 sm:p-6 md:p-8 transition-colors duration-[2400ms]",
+            "max-w-3xl rounded-2xl p-5 sm:p-6 md:p-8",
             darkText
               ? "bg-cream/96 shadow-xl border border-rice/15"
               : "bg-charcoal/75 backdrop-blur-md border border-white/10"
@@ -119,7 +113,7 @@ export function Hero({
               <div
                 key={stat}
                 className={cn(
-                  "rice-stat-pill text-center transition-colors duration-[2400ms]",
+                  "rice-stat-pill text-center",
                   darkText
                     ? "border-rice/25 !bg-white/95 shadow-md"
                     : "!bg-charcoal/80 border-gold/30 shadow-md"

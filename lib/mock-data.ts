@@ -83,16 +83,9 @@ export const MOCK_CATEGORIES: Category[] = [
   },
 ];
 
-const LOCAL_RICE = [
-  "/rice/01-basmati-raw-bowl.png",
-  "/rice/02-cooked-basmati.png",
-  "/rice/03-harvest-paddy.png",
-  "/rice/04-burlap-sack-rice.png",
-  "/rice/05-paddy-field.png",
-  "/rice/06-quality-warehouse.png",
-] as const;
+const HERO_RICE = "/rice/hero-background.png";
 
-const img = (index: number) => LOCAL_RICE[index % LOCAL_RICE.length];
+const img = () => HERO_RICE;
 
 export const MOCK_PRODUCTS: Product[] = [
   {
@@ -117,7 +110,7 @@ export const MOCK_PRODUCTS: Product[] = [
       {
         id: "i1",
         product_id: "p1",
-        url: img(0),
+        url: img(),
         alt: "Premium Basmati",
         sort_order: 0,
       },
@@ -152,7 +145,7 @@ export const MOCK_PRODUCTS: Product[] = [
       {
         id: "i2",
         product_id: "p2",
-        url: img(1),
+        url: img(),
         alt: "HMT Sona Masoori",
         sort_order: 0,
       },
@@ -186,7 +179,7 @@ export const MOCK_PRODUCTS: Product[] = [
       {
         id: "i3",
         product_id: "p3",
-        url: img(2),
+        url: img(),
         alt: "Hotel Special Rice",
         sort_order: 0,
       },
@@ -218,7 +211,7 @@ export const MOCK_PRODUCTS: Product[] = [
       {
         id: "i4",
         product_id: "p4",
-        url: img(3),
+        url: img(),
         alt: "Daily Use Rice",
         sort_order: 0,
       },
@@ -251,7 +244,7 @@ export const MOCK_PRODUCTS: Product[] = [
       {
         id: "i5",
         product_id: "p5",
-        url: img(4),
+        url: img(),
         alt: "Export Premium Basmati",
         sort_order: 0,
       },
@@ -284,7 +277,7 @@ export const MOCK_PRODUCTS: Product[] = [
       {
         id: "i6",
         product_id: "p6",
-        url: img(4),
+        url: img(),
         alt: "Kohinoor Basmati",
         sort_order: 0,
       },
@@ -316,7 +309,7 @@ export const MOCK_PRODUCTS: Product[] = [
       {
         id: "i7",
         product_id: "p7",
-        url: img(1),
+        url: img(),
         alt: "Kranti HMT",
         sort_order: 0,
       },
@@ -348,7 +341,7 @@ export const MOCK_PRODUCTS: Product[] = [
       {
         id: "i8",
         product_id: "p8",
-        url: img(3),
+        url: img(),
         alt: "Sri Sri Sona Masoori",
         sort_order: 0,
       },
@@ -411,45 +404,10 @@ export const MOCK_TESTIMONIALS: Testimonial[] = [
 export const MOCK_GALLERY: GalleryItem[] = [
   {
     id: "g1",
-    category: "quality",
-    image_url: LOCAL_RICE[5],
-    caption: "Quality checks at the mill",
+    category: "rice",
+    image_url: HERO_RICE,
+    caption: "Premium basmati rice grains",
     sort_order: 1,
-  },
-  {
-    id: "g2",
-    category: "rice",
-    image_url: LOCAL_RICE[0],
-    caption: "Premium basmati grains",
-    sort_order: 2,
-  },
-  {
-    id: "g3",
-    category: "rice",
-    image_url: LOCAL_RICE[1],
-    caption: "Cooked basmati — hotel service",
-    sort_order: 3,
-  },
-  {
-    id: "g4",
-    category: "harvest",
-    image_url: LOCAL_RICE[2],
-    caption: "Golden paddy at harvest",
-    sort_order: 4,
-  },
-  {
-    id: "g5",
-    category: "packaging",
-    image_url: LOCAL_RICE[3],
-    caption: "Wholesale sacks and bulk rice",
-    sort_order: 5,
-  },
-  {
-    id: "g6",
-    category: "field",
-    image_url: LOCAL_RICE[4],
-    caption: "Planting in the paddy field",
-    sort_order: 6,
   },
 ];
 
@@ -458,8 +416,8 @@ export const MOCK_SITE_CONTENT: SiteContent[] = [
     id: "sc1",
     key: "hero",
     value: {
-      headline: "Trusted Rice Distribution Across Telangana",
-      subheadline: "Premium Basmati & HMT Sona Masoori",
+      headline: "Best Quality Rice at Wholesale Prices",
+      subheadline: "Premium Basmati & HMT, Sona Masoori",
       tagline: "Bulk Supply for Retailers & Hotels",
       cta_primary: "View Products",
       cta_secondary: "Enquire on WhatsApp",

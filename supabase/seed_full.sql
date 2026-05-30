@@ -51,7 +51,7 @@ SELECT id, true, row_number() OVER (ORDER BY code) <= 12,
 FROM districts;
 
 INSERT INTO site_content (key, value) VALUES
-  ('hero', '{"headline":"Trusted Rice Distribution Across Telangana","subheadline":"Premium Basmati & HMT Sona Masoori","tagline":"Bulk Supply for Retailers & Hotels","cta_primary":"View Products","cta_secondary":"Enquire on WhatsApp"}'::jsonb),
+  ('hero', '{"headline":"Best Quality Rice at Wholesale Prices","subheadline":"Premium Basmati & HMT, Sona Masoori","tagline":"Bulk Supply for Retailers & Hotels","cta_primary":"View Products","cta_secondary":"Enquire on WhatsApp"}'::jsonb),
   ('stats', '{"years":"25+","clients":"500+","districts":"33","tonnes":"10,000+"}'::jsonb),
   ('about', '{"heritage":"A family-owned rice distribution business built on trust, quality, and relationships across Telangana.","warehouse":"State-of-the-art warehousing with climate-controlled storage ensuring grain freshness.","quality":"Rigorous quality checks at sourcing, processing, and dispatch for every batch.","supply_chain":"Direct relationships with mills and logistics partners for reliable bulk supply."}'::jsonb);
 

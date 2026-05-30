@@ -23,7 +23,7 @@ INSERT INTO districts (code, display_name) VALUES
   ('medak', 'Medak');
 
 INSERT INTO site_content (key, value) VALUES
-  ('hero', '{"headline":"Trusted Rice Distribution Across Telangana","subheadline":"Premium Basmati & HMT Sona Masoori","tagline":"Bulk Supply for Retailers & Hotels"}'),
+  ('hero', '{"headline":"Best Quality Rice at Wholesale Prices","subheadline":"Premium Basmati & HMT, Sona Masoori","tagline":"Bulk Supply for Retailers & Hotels"}'),
   ('stats', '{"years":"25+","clients":"500+","districts":"33","tonnes":"10,000+"}'),
   ('about', '{"heritage":"Family-owned rice distribution built on trust across Telangana.","warehouse":"Climate-controlled warehousing.","quality":"Rigorous quality checks at every stage.","supply_chain":"Direct mill and logistics partnerships."}');
 
