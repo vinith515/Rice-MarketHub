@@ -13,7 +13,8 @@ export type RiceGalleryImage = {
   heroTextTheme: HeroTextTheme;
 };
 
-const HERO_SRC = "/rice/hero-background.png";
+/** Rice-only photo — not a UI screenshot */
+const HERO_SRC = "/rice/01-basmati-raw-bowl.png";
 
 /** Fixed homepage hero + site-wide backdrop */
 export const HERO_RICE_IMAGE: RiceGalleryImage = {
