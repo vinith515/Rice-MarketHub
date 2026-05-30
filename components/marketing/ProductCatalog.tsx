@@ -188,7 +188,7 @@ export function ProductCatalog({
                   View all {group.name}
                 </Link>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
                 {group.products.slice(0, 6).map((product, i) => (
                   <ProductCard
                     key={product.id}
@@ -208,7 +208,7 @@ export function ProductCatalog({
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
           {filtered.map((product, i) => (
             <ProductCard
               key={product.id}

@@ -7,17 +7,38 @@ export type WhatsAppSettings = {
   group_description: string;
 };
 
-export type ProductEnquiryParams = {
+export type VisitorContactContext = {
+  contactName?: string;
+  phone?: string;
+  businessType?: string;
+  district?: string;
+  placeName?: string;
+};
+
+export type ProductEnquiryParams = VisitorContactContext & {
   brandName?: string | null;
   productName: string;
   categoryName?: string | null;
   packageKg?: number;
-  businessType?: string;
-  district?: string;
   pricePerKg?: number | null;
   quantityUnit?: "quintals" | "bags";
   quantityValue?: number;
 };
+
+function appendVisitorLines(parts: string[], ctx: VisitorContactContext) {
+  if (ctx.contactName?.trim()) {
+    parts.push(`Name: ${ctx.contactName.trim()}.`);
+  }
+  if (ctx.phone?.trim()) {
+    parts.push(`Phone: ${ctx.phone.trim()}.`);
+  }
+  const businessPart = ctx.businessType
+    ? `Business type: ${ctx.businessType.replace(/_/g, " ")}.`
+    : null;
+  if (businessPart) parts.push(businessPart);
+  if (ctx.district?.trim()) parts.push(`District: ${ctx.district.trim()}.`);
+  if (ctx.placeName?.trim()) parts.push(`Place: ${ctx.placeName.trim()}.`);
+}
 
 const DEFAULT_SETTINGS: WhatsAppSettings = {
   number: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210",
@@ -65,11 +86,21 @@ export function buildProductEnquiryMessage({
   packageKg,
   businessType,
   district,
+  placeName,
+  contactName,
+  phone,
   pricePerKg,
   quantityUnit,
   quantityValue,
 }: ProductEnquiryParams): string {
   const parts: string[] = ["Hello, I would like to enquire about bulk rice supply."];
+  appendVisitorLines(parts, {
+    contactName,
+    phone,
+    businessType,
+    district,
+    placeName,
+  });
 
   if (brandName?.trim()) {
     parts.push(`Brand: ${brandName.trim()}.`);
@@ -99,20 +130,22 @@ export function buildProductEnquiryMessage({
     parts.push(`Quantity required: [please specify quintals or bags].`);
   }
 
-  const businessPart = businessType
-    ? `Business type: ${businessType.replace(/_/g, " ")}.`
-    : null;
-  if (businessPart) parts.push(businessPart);
-  if (district) parts.push(`District: ${district}.`);
-
   return parts.join(" ");
 }
 
-export function buildGeneralEnquiryMessage(businessType?: string): string {
-  const type = businessType
-    ? ` as a ${businessType.replace(/_/g, " ")}`
-    : "";
-  return `Hello, I would like to enquire about bulk rice supply${type} across Telangana.`;
+export function buildGeneralEnquiryMessage(
+  ctx?: VisitorContactContext & { productInterest?: string }
+): string {
+  const parts: string[] = [
+    "Hello, I would like to enquire about bulk rice supply across Telangana.",
+  ];
+  if (ctx) {
+    appendVisitorLines(parts, ctx);
+    if (ctx.productInterest?.trim()) {
+      parts.push(`Looking for: ${ctx.productInterest.trim()}.`);
+    }
+  }
+  return parts.join(" ");
 }
 
 /** Direct chat with your business number (prefilled message). */

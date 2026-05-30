@@ -7,7 +7,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { WhatsAppEnquiryOptions } from "./WhatsAppEnquiryOptions";
 import { RiceHeroSlideshow } from "./RiceHeroSlideshow";
-import { buildGeneralEnquiryMessage } from "@/lib/whatsapp";
+import { useVisitorWhatsAppMessage } from "@/hooks/useVisitorWhatsAppMessage";
 import type { WhatsAppSettings } from "@/lib/whatsapp";
 import { HERO_RICE_IMAGES } from "@/lib/rice-gallery-images";
 import { cn } from "@/lib/utils";
@@ -28,6 +28,7 @@ export function Hero({
   const [slideIndex, setSlideIndex] = useState(0);
   const textTheme = HERO_RICE_IMAGES[slideIndex]?.heroTextTheme ?? "light";
   const darkText = textTheme === "dark";
+  const enquiryMessage = useVisitorWhatsAppMessage();
 
   const headline =
     content?.headline || "Trusted Rice Distribution Across Telangana";
@@ -89,20 +90,21 @@ export function Hero({
             {tagline}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button asChild variant="gold" size="lg" className="shadow-lg">
+          <div className="flex flex-col gap-4">
+            <Button asChild variant="gold" size="lg" className="shadow-lg w-full sm:w-auto">
               <Link href="/products">
                 Explore varieties & prices
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            <WhatsAppEnquiryOptions
-              message={buildGeneralEnquiryMessage()}
-              settings={whatsappSettings}
-              layout="stack"
-              showHint
-              className="sm:max-w-md"
-            />
+            <div className="hidden sm:block sm:max-w-md">
+              <WhatsAppEnquiryOptions
+                message={enquiryMessage}
+                settings={whatsappSettings}
+                layout="stack"
+                showHint
+              />
+            </div>
           </div>
         </motion.div>
 
@@ -110,7 +112,7 @@ export function Hero({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl"
+          className="mt-10 sm:mt-16 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-2xl"
         >
           {["25+ Years", "500+ Clients", "33 Districts", "10K+ Tonnes"].map(
             (stat) => (

@@ -124,13 +124,21 @@ export function ProductCard({
             </div>
           )}
 
-          <Link
-            href={`/products/${product.slug}`}
-            className="mt-4 block text-center text-sm font-medium py-2.5 rounded-lg border-2 border-rice/30 text-rice hover:bg-rice hover:text-cream transition-colors"
-          >
-            View Details
-          </Link>
-          <div className="mt-2">
+          <div className="mt-4 flex flex-col gap-2">
+            <Link
+              href={`/products/${product.slug}`}
+              className="block text-center text-sm font-semibold py-3 rounded-lg bg-rice text-cream hover:bg-rice/90 transition-colors min-h-[48px] flex items-center justify-center"
+            >
+              View & enquire
+            </Link>
+            <Link
+              href={`/products/${product.slug}#enquire`}
+              className="lg:hidden block text-center text-sm font-medium py-2.5 rounded-lg border-2 border-rice/30 text-rice"
+            >
+              Quick WhatsApp enquiry
+            </Link>
+          </div>
+          <div className="hidden lg:block mt-2">
             <ProductWhatsAppEnquiry
               product={product}
               settings={whatsappSettings}

@@ -8,8 +8,8 @@ import { SiteLogo } from "./SiteLogo";
 import { MobileNavDrawer } from "./MobileNavDrawer";
 import { Button } from "@/components/ui/button";
 import { WhatsAppEnquiryOptions } from "./WhatsAppEnquiryOptions";
-import { buildGeneralEnquiryMessage } from "@/lib/whatsapp";
 import type { WhatsAppSettings } from "@/lib/whatsapp";
+import { useVisitorWhatsAppMessage } from "@/hooks/useVisitorWhatsAppMessage";
 import { siteNav, isNavActive } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
 
@@ -22,7 +22,7 @@ export function Header({
   const pathname = usePathname();
   const businessName =
     process.env.NEXT_PUBLIC_BUSINESS_NAME || "Telangana Premium Rice";
-  const enquiryMessage = buildGeneralEnquiryMessage();
+  const enquiryMessage = useVisitorWhatsAppMessage();
 
   useEffect(() => {
     setOpen(false);
@@ -33,7 +33,7 @@ export function Header({
       <header className="fixed top-0 left-0 right-0 z-[100]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <nav className="mt-3 sm:mt-4 flex items-center justify-between rounded-2xl border border-gold/25 bg-charcoal shadow-lg px-3 py-2.5 sm:px-6 sm:py-3">
-            <Link href="/" className="group min-w-0 max-w-[50%] sm:max-w-none">
+            <Link href="/" className="group min-w-0 flex-1 lg:flex-none lg:max-w-none pr-2">
               <SiteLogo businessName={businessName} showName variant="dark" />
             </Link>
 
@@ -57,7 +57,7 @@ export function Header({
               })}
             </div>
 
-            <div className="hidden md:flex items-center gap-3 max-w-md">
+            <div className="hidden lg:flex items-center gap-3 max-w-md shrink-0">
               <Button asChild variant="gold" size="sm" className="shrink-0 shadow-md">
                 <Link href="/products">Products</Link>
               </Button>

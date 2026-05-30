@@ -2,12 +2,14 @@ export const PACKAGE_SIZES = [5, 10, 25, 26, 30, 50] as const;
 
 export const BUSINESS_TYPES = [
   { value: "retailer", label: "Retailer" },
+  { value: "kirana_store", label: "Kirana store" },
   { value: "supermarket", label: "Supermarket" },
   { value: "hotel", label: "Hotel" },
   { value: "restaurant", label: "Restaurant" },
   { value: "mess", label: "Mess" },
   { value: "caterer", label: "Caterer" },
   { value: "distributor", label: "Distributor" },
+  { value: "supplier", label: "Supplier / wholesaler" },
 ] as const;
 
 export const ENQUIRY_STATUSES = [

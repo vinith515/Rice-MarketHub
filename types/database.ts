@@ -84,9 +84,38 @@ export type DistrictCoverage = {
   district?: District;
 };
 
+export type SiteVisitor = {
+  id: string;
+  contact_name: string;
+  phone: string;
+  phone_normalized: string;
+  business_type: string;
+  district_id: string | null;
+  place_name: string | null;
+  email: string | null;
+  last_seen_at: string;
+  created_at: string;
+  updated_at: string;
+  district?: District;
+};
+
+export type VisitorIntent = {
+  id: string;
+  visitor_id: string;
+  product_id: string | null;
+  message: string | null;
+  quantity_unit: "quintals" | "bags" | null;
+  quantity_value: number | null;
+  package_size_kg: number | null;
+  source: "onboarding" | "quick_intent" | "whatsapp" | "form";
+  created_at: string;
+  product?: Product;
+};
+
 export type Enquiry = {
   id: string;
-  source: "form" | "whatsapp_click";
+  source: "form" | "whatsapp_click" | "visitor_intent";
+  visitor_id?: string | null;
   business_type: string;
   contact_name: string;
   phone: string;

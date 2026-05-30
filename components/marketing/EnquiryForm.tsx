@@ -25,6 +25,12 @@ import {
 } from "@/lib/pricing";
 import type { District, Product } from "@/types/database";
 import { cn } from "@/lib/utils";
+import {
+  getStoredVisitor,
+  getBusinessLabel,
+  saveVisitorProfile,
+} from "@/lib/visitor-profile";
+import { useVisitorProfile } from "./VisitorProfileProvider";
 
 type Props = {
   districts: District[];
@@ -42,6 +48,9 @@ export function EnquiryForm({
 }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { profile: ctxProfile, refreshProfile } = useVisitorProfile();
+  const storedProfile = ctxProfile ?? getStoredVisitor();
+  const hasSavedProfile = Boolean(storedProfile);
 
   const {
     register,
@@ -56,8 +65,22 @@ export function EnquiryForm({
       product_id: defaultProductId,
       quantity_unit: "quintals",
       website: "",
+      contact_name: storedProfile?.contact_name ?? "",
+      phone: storedProfile?.phone ?? "",
+      business_type: storedProfile?.business_type ?? "",
+      district_id: storedProfile?.district_id ?? "",
     },
   });
+
+  useEffect(() => {
+    if (!storedProfile) return;
+    setValue("contact_name", storedProfile.contact_name);
+    setValue("phone", storedProfile.phone);
+    setValue("business_type", storedProfile.business_type);
+    if (storedProfile.district_id) {
+      setValue("district_id", storedProfile.district_id);
+    }
+  }, [storedProfile, setValue]);
 
   const productId = watch("product_id");
   const quantityUnit = watch("quantity_unit");
@@ -105,7 +128,12 @@ export function EnquiryForm({
       const res = await fetch("/api/enquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, message, source: "form" }),
+        body: JSON.stringify({
+          ...data,
+          message,
+          source: "form",
+          visitor_id: storedProfile?.id,
+        }),
       });
 
       if (!res.ok) {
@@ -115,6 +143,18 @@ export function EnquiryForm({
             ? err.error
             : "Failed to submit enquiry"
         );
+      }
+
+      if (!hasSavedProfile) {
+        const district = districts.find((d) => d.id === data.district_id);
+        await saveVisitorProfile({
+          contact_name: data.contact_name,
+          phone: data.phone,
+          business_type: data.business_type,
+          district_id: data.district_id || null,
+          district_name: district?.display_name ?? null,
+        });
+        refreshProfile();
       }
 
       trackEvent("enquiry_submit", {
@@ -163,75 +203,117 @@ export function EnquiryForm({
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="contact_name">Name *</Label>
-          <Input id="contact_name" {...register("contact_name")} className="mt-1" />
-          {errors.contact_name && (
-            <p className="text-sm text-red-500 mt-1">{errors.contact_name.message}</p>
-          )}
+      {hasSavedProfile && storedProfile ? (
+        <div className="rounded-xl border border-rice/25 bg-rice/5 px-4 py-3 text-sm text-charcoal">
+          <p className="font-semibold text-rice">Your saved details</p>
+          <p className="mt-1">
+            {storedProfile.contact_name} · {storedProfile.phone}
+          </p>
+          <p className="text-charcoal/75">
+            {getBusinessLabel(storedProfile.business_type)}
+            {storedProfile.district_name
+              ? ` · ${storedProfile.district_name}`
+              : storedProfile.place_name
+                ? ` · ${storedProfile.place_name}`
+                : ""}
+          </p>
+          <input type="hidden" {...register("contact_name")} />
+          <input type="hidden" {...register("phone")} />
+          <input type="hidden" {...register("business_type")} />
+          <input type="hidden" {...register("district_id")} />
         </div>
-        <div>
-          <Label htmlFor="phone">Phone *</Label>
-          <Input id="phone" type="tel" {...register("phone")} className="mt-1" />
-          {errors.phone && (
-            <p className="text-sm text-red-500 mt-1">{errors.phone.message}</p>
-          )}
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <Label htmlFor="contact_name">Name *</Label>
+              <Input
+                id="contact_name"
+                {...register("contact_name")}
+                className="mt-1 h-12 text-base"
+              />
+              {errors.contact_name && (
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.contact_name.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="phone">Phone *</Label>
+              <Input
+                id="phone"
+                type="tel"
+                inputMode="tel"
+                {...register("phone")}
+                className="mt-1 h-12 text-base"
+              />
+              {errors.phone && (
+                <p className="text-sm text-red-500 mt-1">{errors.phone.message}</p>
+              )}
+            </div>
+          </div>
 
-      <div>
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" {...register("email")} className="mt-1" />
-      </div>
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              {...register("email")}
+              className="mt-1 h-12 text-base"
+            />
+          </div>
 
-      <div>
-        <Label>Business Type *</Label>
-        <Controller
-          name="business_type"
-          control={control}
-          render={({ field }) => (
-            <Select onValueChange={field.onChange} value={field.value}>
-              <SelectTrigger className="mt-1">
-                <SelectValue placeholder="Select business type" />
-              </SelectTrigger>
-              <SelectContent>
-                {BUSINESS_TYPES.map((t) => (
-                  <SelectItem key={t.value} value={t.value}>
-                    {t.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        />
-        {errors.business_type && (
-          <p className="text-sm text-red-500 mt-1">{errors.business_type.message}</p>
-        )}
-      </div>
-
-      {districts.length > 0 && (
-        <div>
-          <Label>District</Label>
-          <Controller
-            name="district_id"
-            control={control}
-            render={({ field }) => (
-              <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Select district" />
-                </SelectTrigger>
-                <SelectContent>
-                  {districts.map((d) => (
-                    <SelectItem key={d.id} value={d.id}>
-                      {d.display_name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <div>
+            <Label>Business Type *</Label>
+            <Controller
+              name="business_type"
+              control={control}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="mt-1 h-12">
+                    <SelectValue placeholder="Select business type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {BUSINESS_TYPES.map((t) => (
+                      <SelectItem key={t.value} value={t.value}>
+                        {t.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.business_type && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.business_type.message}
+              </p>
             )}
-          />
-        </div>
+          </div>
+
+          {districts.length > 0 && (
+            <div>
+              <Label>District</Label>
+              <Controller
+                name="district_id"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="mt-1 h-12">
+                      <SelectValue placeholder="Select district" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {districts.map((d) => (
+                        <SelectItem key={d.id} value={d.id}>
+                          {d.display_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+          )}
+        </>
       )}
 
       {products.length > 0 && (

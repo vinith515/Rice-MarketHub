@@ -55,3 +55,29 @@ export const analyticsSchema = z.object({
 });
 
 export type EnquiryFormData = z.infer<typeof enquirySchema>;
+
+export const visitorProfileSchema = z.object({
+  contact_name: z.string().min(2, "Name is required"),
+  phone: z.string().min(10, "Valid phone required"),
+  business_type: z.string().min(1, "Select your business type"),
+  district_id: z.string().uuid().optional().or(z.literal("")),
+  place_name: z.string().max(120).optional(),
+  email: z.string().email().optional().or(z.literal("")),
+});
+
+export const visitorLookupSchema = z.object({
+  lookup: z.literal(true),
+  phone: z.string().min(10),
+});
+
+export const visitorIntentSchema = z.object({
+  visitor_id: z.string().uuid(),
+  product_id: z.string().uuid().optional(),
+  message: z.string().min(2).optional(),
+  quantity_unit: z.enum(["quintals", "bags"]).optional(),
+  quantity_value: z.coerce.number().positive().optional(),
+  package_size_kg: z.coerce.number().optional(),
+  source: z.enum(["quick_intent", "whatsapp", "form"]).optional(),
+});
+
+export type VisitorProfileFormData = z.infer<typeof visitorProfileSchema>;

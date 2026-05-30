@@ -26,7 +26,7 @@ export function StatsSection({ stats }: { stats: Stats | null }) {
           title="Supplying Telangana with Excellence"
           light
         />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
           {items.map((item, i) => (
             <motion.div
               key={item.label}

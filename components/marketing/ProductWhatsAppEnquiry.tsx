@@ -18,6 +18,11 @@ import {
   type WhatsAppSettings,
 } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
+import {
+  getStoredVisitor,
+  recordVisitorIntent,
+} from "@/lib/visitor-profile";
+import { visitorToWhatsAppContext } from "@/hooks/useVisitorWhatsAppMessage";
 
 type ProductInfo = {
   id: string;
@@ -56,22 +61,20 @@ export function ProductWhatsAppEnquiry({
 
   const qtyNum = quantity.trim() ? Number(quantity) : NaN;
 
-  const message = useMemo(
-    () =>
-      buildProductEnquiryMessage({
-        brandName: product.brand?.name,
-        productName: product.name,
-        categoryName: product.category?.name,
-        pricePerKg: product.price_per_kg,
-        quantityUnit: ready && !Number.isNaN(qtyNum) ? unit : undefined,
-        quantityValue: ready && !Number.isNaN(qtyNum) ? qtyNum : undefined,
-        packageKg:
-          unit === "bags" && bagKg
-            ? Number(bagKg)
-            : defaultBag,
-      }),
-    [product, unit, qtyNum, bagKg, defaultBag, ready]
-  );
+  const message = useMemo(() => {
+    const visitorCtx = visitorToWhatsAppContext(getStoredVisitor());
+    return buildProductEnquiryMessage({
+      ...visitorCtx,
+      brandName: product.brand?.name,
+      productName: product.name,
+      categoryName: product.category?.name,
+      pricePerKg: product.price_per_kg,
+      quantityUnit: ready && !Number.isNaN(qtyNum) ? unit : undefined,
+      quantityValue: ready && !Number.isNaN(qtyNum) ? qtyNum : undefined,
+      packageKg:
+        unit === "bags" && bagKg ? Number(bagKg) : defaultBag,
+    });
+  }, [product, unit, qtyNum, bagKg, defaultBag, ready]);
 
   const handlePrepare = () => {
     if (!quantity.trim() || Number.isNaN(qtyNum) || qtyNum <= 0) {
@@ -85,7 +88,30 @@ export function ProductWhatsAppEnquiry({
       return;
     }
     setError(null);
+    const visitorCtx = visitorToWhatsAppContext(getStoredVisitor());
+    const builtMessage = buildProductEnquiryMessage({
+      ...visitorCtx,
+      brandName: product.brand?.name,
+      productName: product.name,
+      categoryName: product.category?.name,
+      pricePerKg: product.price_per_kg,
+      quantityUnit: unit,
+      quantityValue: qtyNum,
+      packageKg: unit === "bags" && bagKg ? Number(bagKg) : defaultBag,
+    });
     setReady(true);
+    const visitor = getStoredVisitor();
+    if (visitor) {
+      void recordVisitorIntent({
+        visitor_id: visitor.id,
+        product_id: product.id,
+        message: builtMessage,
+        quantity_unit: unit,
+        quantity_value: qtyNum,
+        package_size_kg: unit === "bags" && bagKg ? Number(bagKg) : undefined,
+        source: "whatsapp",
+      });
+    }
   };
 
   if (!ready) {

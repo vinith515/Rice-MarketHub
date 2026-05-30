@@ -38,7 +38,7 @@ export default async function HomePage() {
             title="Premium Rice Varieties"
             description="Curated for retailers, hotels, restaurants, and bulk buyers."
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
             {featuredProducts.slice(0, 3).map((product, i) => (
               <ProductCard
                 key={product.id}

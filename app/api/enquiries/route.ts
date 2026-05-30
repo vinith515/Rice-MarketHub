@@ -34,7 +34,8 @@ export async function POST(request: Request) {
       quantity_value: parsed.data.quantity_value ?? null,
       message: parsed.data.message,
       status: "new" as const,
-      metadata: {},
+      metadata: body.visitor_id ? { visitor_id: body.visitor_id } : {},
+      visitor_id: body.visitor_id || null,
     };
 
     if (!isSupabaseConfigured()) {
